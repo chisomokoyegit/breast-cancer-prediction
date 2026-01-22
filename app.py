@@ -7,8 +7,7 @@ from pathlib import Path
 app = Flask(__name__)
 
 # ======= Paths =======
-MODEL_DIR = Path(__file__).parent / "model"
-MODEL_PATH = MODEL_DIR / "breast_cancer_model.pkl"
+MODEL_PATH = Path(__file__).parent / "breast_cancer_model.pkl"
 
 # ======= Load or create model =======
 if not MODEL_PATH.exists():
@@ -25,8 +24,9 @@ if not MODEL_PATH.exists():
     df["diagnosis"] = data.target  # 0 = malignant, 1 = benign
 
     # Select features
-    features = ["mean radius", "mean texture", "mean perimeter", "mean area", "mean smoothness"]
-    X = df[features]
+    features = ["radius_mean", "texture_mean", "perimeter_mean", "area_mean", "smoothness_mean"]
+    feature_names = ["mean radius", "mean texture", "mean perimeter", "mean area", "mean smoothness"]
+    X = df[feature_names]
     y = df["diagnosis"]
 
     # Fill missing values (just in case)
@@ -41,8 +41,7 @@ if not MODEL_PATH.exists():
     model = LogisticRegression(max_iter=1000)
     model.fit(X_train, y_train)
 
-    # Save model + scaler + features
-    MODEL_DIR.mkdir(exist_ok=True)
+    # Save model + scaler
     with open(MODEL_PATH, "wb") as f:
         pickle.dump({
             "model": model,
@@ -67,8 +66,8 @@ def predict():
     try:
         # Read input values dynamically
         user_input = []
-        for feat in features:
-            val = request.form.get(feat.replace(" ", "_"))  # form input names use underscores
+        for feat in ["radius_mean", "texture_mean", "perimeter_mean", "area_mean", "smoothness_mean"]:
+            val = request.form.get(feat)
             if val is None or val.strip() == "":
                 return render_template("index.html", prediction=f"Error: Missing value for {feat}")
             user_input.append(float(val))
