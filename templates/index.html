@@ -1,99 +1,30 @@
-<!-- templates/index.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Breast Cancer Prediction System</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        .container {
-            background-color: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #333;
-            text-align: center;
-        }
-        .disclaimer {
-            text-align: center;
-            color: #d9534f;
-            font-weight: bold;
-        }
-        .input-group {
-            margin: 15px 0;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #555;
-        }
-        input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-            box-sizing: border-box;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            margin-top: 20px;
-            background-color: #5cb85c;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #4cae4c;
-        }
-        .result {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #f9f9f9;
-            border-left: 4px solid #5cb85c;
-            border-radius: 4px;
-            font-weight: bold;
-            color: #333;
-        }
-    </style>
+    <title>Breast Cancer Prediction</title>
 </head>
 <body>
-    <div class="container">
-        <h1>Breast Cancer Prediction System</h1>
-        <p class="disclaimer">⚠️ For educational purposes only. Not a medical diagnostic tool.</p>
+    <h2>Breast Cancer Prediction System</h2>
 
-        <form action="/predict" method="post">
-            {% for feat in ['radius_mean','texture_mean','perimeter_mean','area_mean','smoothness_mean'] %}
-            <div class="input-group">
-                <label for="{{feat}}">{{ feat.replace('_',' ').title() }}</label>
-                <input type="number" step="any" name="{{feat}}" required>
-            </div>
-            {% endfor %}
-            <button type="submit">Predict</button>
-        </form>
+    <form method="post">
+        <input type="text" name="radius" placeholder="Radius Mean" required><br><br>
+        <input type="text" name="texture" placeholder="Texture Mean" required><br><br>
+        <input type="text" name="perimeter" placeholder="Perimeter Mean" required><br><br>
+        <input type="text" name="area" placeholder="Area Mean" required><br><br>
+        <input type="text" name="concavity" placeholder="Concavity Mean" required><br><br>
 
-        {% if prediction %}
-        <div class="result">
-            <h2>{{ prediction }}</h2>
-        </div>
-        {% endif %}
-    </div>
+        <button type="submit">Predict</button>
+    </form>
+
+    {% if prediction %}
+        <h3>Prediction Result: {{ prediction }}</h3>
+    {% endif %}
+
+    <p><i>This system is for educational purposes only.</i></p>
 </body>
 </html>
+
+
 
 
 
