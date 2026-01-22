@@ -34,10 +34,23 @@ X_train, X_test, y_train, y_test = train_test_split(
 model = LogisticRegression(max_iter=1000)
 model.fit(X_train, y_train)
 
-# 7. Evaluate
+# 7. Evaluate model with all metrics
 y_pred = model.predict(X_test)
-print("Classification Report:")
+accuracy = accuracy_score(y_test, y_pred)
+precision = precision_score(y_test, y_pred)
+recall = recall_score(y_test, y_pred)
+f1 = f1_score(y_test, y_pred)
+
+print("=" * 50)
+print("MODEL EVALUATION METRICS")
+print("=" * 50)
+print(f"Accuracy:  {accuracy:.4f}")
+print(f"Precision: {precision:.4f}")
+print(f"Recall:    {recall:.4f}")
+print(f"F1-Score:  {f1:.4f}")
+print("\nClassification Report:")
 print(classification_report(y_test, y_pred, target_names=["Malignant", "Benign"]))
+print("=" * 50)
 
 # 8. Save model + scaler
 with open("breast_cancer_model.pkl", "wb") as f:
