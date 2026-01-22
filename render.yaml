@@ -1,4 +1,12 @@
-runtime: python
-pythonVersion: "3.10"
-entrypoint: gunicorn -b :$PORT render:app
+# render.yaml
+services:
+  - type: web
+    name: breast-cancer-app
+    env: python
+    plan: free
+    branch: main
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn -b :$PORT app:app
+    pythonVersion: "3.10"
+
 
