@@ -2,7 +2,8 @@ services:
   - type: web
     name: breast-cancer-predictor
     env: python
-    pythonVersion: 3.13
+    pythonVersion: 3.10.13
+
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn app:app
 

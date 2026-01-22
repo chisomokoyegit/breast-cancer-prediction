@@ -1,64 +1,62 @@
-import numpy as np
-import pandas as pd
 import pickle
+import pandas as pd
 from sklearn.datasets import load_breast_cancer
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import classification_report
 
-# 1. Load dataset
+# Load dataset
 data = load_breast_cancer()
 df = pd.DataFrame(data.data, columns=data.feature_names)
-df["diagnosis"] = data.target  # 0 = Malignant, 1 = Benign
+df["diagnosis"] = data.target
 
-# 2. Select ONLY five approved features
+# Rename columns to match assignment
+df.rename(columns={
+    "mean radius": "radius_mean",
+    "mean texture": "texture_mean",
+    "mean perimeter": "perimeter_mean",
+    "mean area": "area_mean",
+    "mean smoothness": "smoothness_mean"
+}, inplace=True)
+
+# Select 5 features
 features = [
-    "mean radius",
-    "mean texture",
-    "mean perimeter",
-    "mean area",
-    "mean smoothness"
+    "radius_mean",
+    "texture_mean",
+    "perimeter_mean",
+    "area_mean",
+    "smoothness_mean"
 ]
 
 X = df[features]
 y = df["diagnosis"]
 
-# 3. Handle missing values (dataset has none, but included for compliance)
-X = X.fillna(X.mean())
-
-# 4. Feature scaling (MANDATORY)
+# Scale features
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 
-# 5. Train-test split
+# Train model
 X_train, X_test, y_train, y_test = train_test_split(
     X_scaled, y, test_size=0.2, random_state=42, stratify=y
 )
 
-# 6. Train model
 model = LogisticRegression(max_iter=1000)
 model.fit(X_train, y_train)
 
-# 7. Evaluate model
-y_pred = model.predict(X_test)
+# Evaluate
+print(classification_report(y_test, model.predict(X_test)))
 
-print("Accuracy:", accuracy_score(y_test, y_pred))
-print("\nClassification Report:")
-print(classification_report(y_test, y_pred, target_names=["Malignant", "Benign"]))
-
-# 8. Save model + scaler (Pickle)
+# Save model
 with open("breast_cancer_model.pkl", "wb") as f:
-    pickle.dump(
-        {
-            "model": model,
-            "scaler": scaler,
-            "features": features
-        },
-        f
-    )
+    pickle.dump({
+        "model": model,
+        "scaler": scaler,
+        "features": features
+    }, f)
 
 print("✅ Breast cancer model saved successfully")
+
 
 
 
