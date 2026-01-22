@@ -1,14 +1,7 @@
 Name: Chisom Okoye
 Matric Number: 22CE032242
+Machine Learning Algorithm Used: Logistic Regression
+Model Persistence Method Used: Joblib
+Live URL of the hosted application: https://breast-cancer-prediction-si21.onrender.com
+GitHub Repository Link: https://github.com/chisomokoyegit/breast-cancer-prediction
 
-Machine Learning Algorithm Used:
-Logistic Regression
-
-Model Persistence Method Used:
-Pickle
-
-Live URL of the Hosted Application:
-https://your-render-link-here.onrender.com
-
-GitHub Repository Link:
-https://github.com/chisomokoyegit/BreastCancer_Project_Chisom_Okoye_22CE032242
