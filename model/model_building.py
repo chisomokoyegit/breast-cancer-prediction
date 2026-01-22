@@ -1,47 +1,64 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
 import pickle
-
+from sklearn.datasets import load_breast_cancer
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler, LabelEncoder
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report
 
 # 1. Load dataset
-df = pd.read_csv("breast_cancer.csv")  # your dataset here
+data = load_breast_cancer()
+df = pd.DataFrame(data.data, columns=data.feature_names)
+df["diagnosis"] = data.target  # 0 = Malignant, 1 = Benign
 
-# 2. Select features (choose 5)
-features = ["radius_mean", "texture_mean", "perimeter_mean", "area_mean", "smoothness_mean"]
+# 2. Select ONLY five approved features
+features = [
+    "mean radius",
+    "mean texture",
+    "mean perimeter",
+    "mean area",
+    "mean smoothness"
+]
+
 X = df[features]
+y = df["diagnosis"]
 
-# 3. Encode target
-y = LabelEncoder().fit_transform(df["diagnosis"])  # Benign=0, Malignant=1
+# 3. Handle missing values (dataset has none, but included for compliance)
+X = X.fillna(X.mean())
 
-# 4. Handle missing values
-X = X.fillna(X.median())
-
-# 5. Feature scaling
+# 4. Feature scaling (MANDATORY)
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 
-# 6. Train-test split
-X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+# 5. Train-test split
+X_train, X_test, y_train, y_test = train_test_split(
+    X_scaled, y, test_size=0.2, random_state=42, stratify=y
+)
 
-# 7. Train KNN model
-model = KNeighborsClassifier(n_neighbors=5)
+# 6. Train model
+model = LogisticRegression(max_iter=1000)
 model.fit(X_train, y_train)
 
-# 8. Evaluate
+# 7. Evaluate model
 y_pred = model.predict(X_test)
+
 print("Accuracy:", accuracy_score(y_test, y_pred))
-print("Precision:", precision_score(y_test, y_pred))
-print("Recall:", recall_score(y_test, y_pred))
-print("F1 Score:", f1_score(y_test, y_pred))
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred, target_names=["Malignant", "Benign"]))
 
-# 9. Save model and scaler
+# 8. Save model + scaler (Pickle)
 with open("breast_cancer_model.pkl", "wb") as f:
-    pickle.dump({"model": model, "scaler": scaler}, f)
+    pickle.dump(
+        {
+            "model": model,
+            "scaler": scaler,
+            "features": features
+        },
+        f
+    )
 
-print("✅ Model saved successfully")
+print("✅ Breast cancer model saved successfully")
+
 
 
